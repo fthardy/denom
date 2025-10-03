@@ -8,13 +8,8 @@ import java.util.Objects;
 public non-sealed abstract class AtomicIdent extends DomainIdent {
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (super.equals(obj) && this.getClass().equals(obj.getClass())) {
-            AtomicIdent other = (AtomicIdent) obj;
-            return this.getIdentitySequence().equals(other.getIdentitySequence());
-        }
-        return false;
+    public boolean equals(Object object) {
+        return super.equals(object) && getIdentitySequence().equals(((AtomicIdent) object).getIdentitySequence());
     }
 
     @Override

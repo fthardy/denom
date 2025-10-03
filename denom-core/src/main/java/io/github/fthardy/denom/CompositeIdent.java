@@ -15,34 +15,30 @@ public non-sealed abstract class CompositeIdent extends DomainIdent {
     /**
      * Initializes a new instance of a composite domain identifier.
      * <p>
-     * {@code null} values are going to be ignored but at least two identifiers must be defined and all identifiers must be distinct. Otherwise, an
-     * {@link IllegalArgumentException} is thrown.
+     * At least two identifiers must be defined and all identifiers must be distinct. Otherwise, an {@link IllegalArgumentException} is thrown.
      * </p>
      *
      * @param first the first identifier.
-     * @param further any further identifiers.
+     * @param further must contain the second any further identifiers.
      */
     protected CompositeIdent(DomainIdent first, DomainIdent... further) {
         List<DomainIdent> list = new ArrayList<>();
-        list.add(first);
-        if (further.length != 0) {
-            list.addAll(Arrays.stream(further).toList());
+        list.add(Objects.requireNonNull(first));
+        if (further.length == 0) {
+            throw new IllegalArgumentException("At least two identifiers must be defined!");
         }
-        List<DomainIdent> nullStripped = list.stream().filter(Objects::nonNull).toList();
-        List<DomainIdent> distinctList = nullStripped.stream().distinct().toList();
-        if (distinctList.size() < nullStripped.size() || distinctList.size() < 2) {
-            throw new IllegalArgumentException("At least two identifiers must be defined and all identifiers must be distinct!");
+        list.addAll(Arrays.stream(further).map(Objects::requireNonNull).toList());
+        List<DomainIdent> distinctList = list.stream().distinct().toList();
+        if (list.size() != list.stream().distinct().toList().size()) {
+            throw new IllegalArgumentException("Duplicate identifiers detected! All identifiers must be distinct!");
         }
         this.components = distinctList;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (super.equals(obj) && this.getClass().equals(obj.getClass())) {
-            CompositeIdent other = (CompositeIdent) obj;
-            return Objects.equals(components, other.components);
-        }
-        return false;
+    public boolean equals(Object object) {
+        return super.equals(object) &&
+                Objects.equals(components, ((CompositeIdent) object).components);
     }
 
     @Override

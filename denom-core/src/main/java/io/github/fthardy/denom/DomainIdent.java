@@ -8,18 +8,14 @@ import java.util.Objects;
 public sealed abstract class DomainIdent permits AtomicIdent, CompositeIdent {
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj != null && this.getClass().equals(obj.getClass())) {
-            DomainIdent other = (DomainIdent) obj;
-            return type().equals(other.type());
-        }
-        return false;
+    public boolean equals(Object object) {
+        if (object == this) return true;
+        return object != null && getClass().equals(object.getClass()) && type().equals(((DomainIdent) object).type());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(type());
+        return Objects.hash(this.getClass(), type());
     }
 
     /**
