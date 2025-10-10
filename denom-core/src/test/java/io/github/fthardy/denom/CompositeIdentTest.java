@@ -12,54 +12,42 @@ class CompositeIdentTest {
 
     @Test
     void creation__composite_identities_are_not_allowed_to_be_null() {
-        IdentType type = new IdentType("test");
-        assertThrows(NullPointerException.class, () -> new CompositeIdentImplForTest(type, null));
-        assertThrows(NullPointerException.class, () -> new CompositeIdentImplForTest(type, //
-                        new StringBasedAtomicIdentImplForTest(type, "1"),
-                        null,
-                        new StringBasedAtomicIdentImplForTest(type, "2")));
+        assertThrows(NullPointerException.class, () -> new CompositeIdentImplForTest(null, null));
+        assertThrows(NullPointerException.class, () -> new CompositeIdentImplForTest(new StringBasedAtomicIdentImplForTest("1"), null));
+        assertThrows(NullPointerException.class, () -> new CompositeIdentImplForTest( //
+                new StringBasedAtomicIdentImplForTest("1"), new StringBasedAtomicIdentImplForTest("2"), (DomainIdent[]) null));
     }
 
     @Test
     void creation__at_least_two_identities_must_be_defined() {
-        IdentType type = new IdentType("test");
-        assertThrows(IllegalArgumentException.class, () -> //
-                new CompositeIdentImplForTest(new IdentType("test"), new StringBasedAtomicIdentImplForTest(type, "1")));
-
-        assertDoesNotThrow(() -> new CompositeIdentImplForTest(type, //
-                new StringBasedAtomicIdentImplForTest(type, "1"),
-                new StringBasedAtomicIdentImplForTest(type,"2")));
+        assertDoesNotThrow(() -> new CompositeIdentImplForTest( //
+                new StringBasedAtomicIdentImplForTest("1"), new StringBasedAtomicIdentImplForTest("2")));
     }
 
     @Test
     void creation__all_identities_must_be_distinct() {
-        IdentType type = new IdentType("test");
-        assertThrows(IllegalArgumentException.class, () -> new CompositeIdentImplForTest(type, //
-                new StringBasedAtomicIdentImplForTest(type, "1"),
-                new StringBasedAtomicIdentImplForTest(type, "1")));
+        assertThrows(IllegalArgumentException.class, () -> new CompositeIdentImplForTest(
+                new StringBasedAtomicIdentImplForTest("1"), new StringBasedAtomicIdentImplForTest("1")));
     }
 
     @Test
     void equalsAndHashCodeWithSet() {
 
-        IdentType type = new IdentType("test");
-
-        CompositeIdent instance = new CompositeIdentImplForTest(type,
-                new StringBasedAtomicIdentImplForTest(type, "foo"),
-                new StringBasedAtomicIdentImplForTest(type, "bar"));
+        CompositeIdent instance = new CompositeIdentImplForTest(
+                new StringBasedAtomicIdentImplForTest("foo"),
+                new StringBasedAtomicIdentImplForTest("bar"));
         assertThat(instance.components()).hasSize(2);
 
-        CompositeIdent equalInstance = new CompositeIdentImplForTest(type,
-                new StringBasedAtomicIdentImplForTest(type, "foo"),
-                new StringBasedAtomicIdentImplForTest(type, "bar"));
+        CompositeIdent equalInstance = new CompositeIdentImplForTest(
+                new StringBasedAtomicIdentImplForTest("foo"), new StringBasedAtomicIdentImplForTest("bar"));
         assertThat(equalInstance).isEqualTo(instance);
-        CompositeIdent notEqualInstance = new CompositeIdentImplForTest(type,
-                new StringBasedAtomicIdentImplForTest(type, "foo"),
-                new StringBasedAtomicIdentImplForTest(type, "bar"),
-                new StringBasedAtomicIdentImplForTest(type, "baz"));
+        CompositeIdent notEqualInstance = new CompositeIdentImplForTest(
+                new StringBasedAtomicIdentImplForTest("foo"),
+                new StringBasedAtomicIdentImplForTest("bar"),
+                new StringBasedAtomicIdentImplForTest("baz"));
         assertThat(notEqualInstance).isNotEqualTo(instance);
 
-        DomainIdent otherImpl = new StringBasedAtomicIdentImplForTest(type, "foo");
+        DomainIdent otherImpl = new StringBasedAtomicIdentImplForTest("foo");
 
         Set<DomainIdent> set = new HashSet<>();
 

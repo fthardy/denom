@@ -1,16 +1,13 @@
 package io.github.fthardy.denom;
 
-final class StringBasedAtomicIdentImplForTest extends StringBasedAtomicIdent {
+public final class StringBasedAtomicIdentImplForTest extends StringBasedAtomicIdent {
 
-    private final IdentType type;
-
-    StringBasedAtomicIdentImplForTest(IdentType type, String identitySequence) {
-        super(identitySequence);
-        this.type = type;
+    @DomainIdentProducer
+    static StringBasedAtomicIdentImplForTest fromIdentitySequence(String identitySequence) {
+        return new StringBasedAtomicIdentImplForTest(identitySequence);
     }
 
-    @Override
-    public IdentType type() {
-        return type;
+    public StringBasedAtomicIdentImplForTest(String identitySequence) {
+        super("string-atomic", identitySequence);
     }
 }

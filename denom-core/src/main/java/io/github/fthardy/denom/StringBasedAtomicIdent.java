@@ -14,7 +14,8 @@ public abstract class StringBasedAtomicIdent extends AtomicIdent {
      *
      * @param identitySequence the raw identity string sequence.
      */
-    protected StringBasedAtomicIdent(String identitySequence) {
+    protected StringBasedAtomicIdent(String typeName, String identitySequence) {
+        super(typeName);
         this.identitySequence = Objects.requireNonNull(identitySequence);
     }
 

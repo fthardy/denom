@@ -1,16 +1,13 @@
 package io.github.fthardy.denom;
 
-final class CompositeIdentImplForTest extends CompositeIdent {
+public final class CompositeIdentImplForTest extends CompositeIdent {
 
-    private final IdentType type;
-
-    CompositeIdentImplForTest(IdentType type, DomainIdent first, DomainIdent... further) {
-        super(first, further);
-        this.type = type;
+    @DomainIdentProducer
+    static CompositeIdentImplForTest produce(DomainIdent first, DomainIdent second, DomainIdent... further) {
+        return new CompositeIdentImplForTest(first, second, further);
     }
 
-    @Override
-    public IdentType type() {
-        return type;
+    public CompositeIdentImplForTest(DomainIdent first, DomainIdent second, DomainIdent... further) {
+        super("composite", first, second, further);
     }
 }
