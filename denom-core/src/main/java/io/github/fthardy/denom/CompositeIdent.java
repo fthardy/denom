@@ -8,37 +8,7 @@ import java.util.stream.Collectors;
  */
 public non-sealed abstract class CompositeIdent extends DomainIdent {
 
-    /**
-     * Creates an instance from a particular domain identifier type name and domain identifier instances as components.
-     *
-     * @param typeId the domain identifier type name.
-     * @param first the first domain identifier instance.
-     * @param further the second domain identifier and any further instances.
-     *
-     * @return a new composite identifier instance.
-     */
-    public static CompositeIdent createInstance(String typeId, DomainIdent first, DomainIdent second, DomainIdent... further) {
-        return (CompositeIdent) createInstance(findAnnotatedProducerMethod( //
-                DomainIdent.classForTypeId(typeId), new Class<?>[] {DomainIdent.class, DomainIdent.class, further.getClass()}), first, second, further);
-    }
-
-    private final List<DomainIdent> components;
-
-    /**
-     * Initializes a new instance of a composite domain identifier.
-     * <p>
-     * At least two identifiers must be defined and all identifiers must be distinct. Otherwise, an {@link IllegalArgumentException} is thrown.
-     * </p>
-     *
-     * @param typeId the type-ID for the new instance. IMPORTANT: Never expose the type-ID as parameter at the concrete implementation
-     *                 constructors! Always set a unique, "hard coded" type-ID for each concrete implementation on construction.
-     * @param first the first identifier.
-     * @param second the second identifier.
-     * @param further optionally any further identifiers.
-     */
-    protected CompositeIdent(String typeId, DomainIdent first, DomainIdent second, DomainIdent... further) {
-        super(typeId);
-
+    static List<DomainIdent> createComponentListFrom(DomainIdent first, DomainIdent second, DomainIdent... further) {
         Set<DomainIdent> set = new LinkedHashSet<>();
         set.add(Objects.requireNonNull(first));
         set.add(Objects.requireNonNull(second));
@@ -46,9 +16,28 @@ public non-sealed abstract class CompositeIdent extends DomainIdent {
             set.addAll(Arrays.stream(further).map(Objects::requireNonNull).toList());
         }
         if (set.size() != further.length + 2) {
-            throw new IllegalArgumentException("Duplicate identifiers detected! All identifiers must be distinct!");
+            throw new IllegalArgumentException("Duplicate identifiers detected! Each component identifier must be unique within the composite!");
         }
-        this.components = set.stream().toList();
+        return set.stream().toList();
+    }
+
+    private final List<DomainIdent> components;
+
+    /**
+     * Initializes a new instance of a composite domain identifier.
+     * <p>
+     * At least two identifiers must be defined and no duplicate identifiers are allowed.
+     * </p>
+     *
+     * @param identType the identity type for the new domain identifier.
+     *                  <strong>The identity type is an internal detail. Do not expose it to the outside!</strong>
+     * @param first the first identifier.
+     * @param second the second identifier.
+     * @param further optionally any further identifiers.
+     */
+    protected CompositeIdent(IdentType identType, DomainIdent first, DomainIdent second, DomainIdent... further) {
+        super(identType);
+        this.components = createComponentListFrom(first, second, further);
     }
 
     @Override
@@ -63,7 +52,7 @@ public non-sealed abstract class CompositeIdent extends DomainIdent {
 
     @Override
     public String toString() {
-        return "%s[%s]".formatted(typeId(), components.stream().map(DomainIdent::toString).collect(Collectors.joining(", ")));
+        return "%s[%s]".formatted(type(), components.stream().map(DomainIdent::toString).collect(Collectors.joining(", ")));
     }
 
     /**

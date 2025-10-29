@@ -7,27 +7,18 @@ import java.util.Objects;
  */
 public non-sealed abstract class AtomicIdent extends DomainIdent {
 
-    /**
-     * Creates an instance from a particular domain identifier type name and identity sequence.
-     *
-     * @param typeId the domain identifier type name.
-     * @param identitySequence the identity sequence.
-     *
-     * @return a new atomic identifier instance.
-     */
-    public static AtomicIdent createInstance(String typeId, String identitySequence) {
-        return (AtomicIdent) createInstance(findAnnotatedProducerMethod( //
-                DomainIdent.classForTypeId(typeId), new Class<?>[] { identitySequence.getClass() }), identitySequence);
-    }
+    private final String identitySequence;
 
     /**
      * Initializes a new instance of an atomic domain identifier.
      *
-     * @param typeId the type-ID for the new instance. IMPORTANT: Never expose the type-ID as parameter at the concrete implementation
-     *                 constructors! Always set a unique, "hard coded" type-ID for each concrete implementation on construction.
+     * @param identType the identity type for the new domain identifier.
+     *                  <strong>The identity type is an internal detail. Do not expose it to the outside!</strong>
+     * @param identitySequence the identity sequence.
      */
-    protected AtomicIdent(String typeId) {
-        super(typeId);
+    protected AtomicIdent(IdentType identType, String identitySequence) {
+        super(identType);
+        this.identitySequence = Objects.requireNonNull(identitySequence);
     }
 
     @Override
@@ -42,11 +33,13 @@ public non-sealed abstract class AtomicIdent extends DomainIdent {
 
     @Override
     public String toString() {
-        return "%s:%s".formatted(typeId(), getIdentitySequence());
+        return "%s:%s".formatted(type(), getIdentitySequence());
     }
 
     /**
      * @return the raw identity sequence as a string representation.
      */
-    public abstract String getIdentitySequence();
+    public String getIdentitySequence() {
+        return identitySequence;
+    }
 }

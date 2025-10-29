@@ -1,6 +1,7 @@
 package io.github.fthardy.denom.converter;
 
 import io.github.fthardy.denom.DomainIdent;
+import io.github.fthardy.denom.IdentType;
 
 /**
  * Represents a converter which can convert a domain identifier to and from a canonical string representation.
@@ -21,6 +22,13 @@ import io.github.fthardy.denom.DomainIdent;
  * @see DomainIdent
  */
 public interface DomainIdentCanonicalConverter {
+
+    /**
+     * Check whether the given type is supported by the converter.
+     *
+     * @param type the type to check.
+     */
+    void assertSupports(IdentType type);
 
     /**
      * Converts a canonical string representation of a domain identifier into the identifier model representation.
