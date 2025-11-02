@@ -1,14 +1,15 @@
 # Denom
 
-*A lean framework to build type-safe identifiers for modern, domain-driven systems.*
+*A lean framework to build type-safe domain entity identifiers for modern, domain-driven systems.*
 
 ---
 
-**Denom** aims to be a lightweight toolkit for working with **domain identifiers** – unique, business-relevant identifiers such as employer numbers, social security numbers, IBANs, or ISBNs.
+**Denom** aims to be a lightweight toolkit for working with **domain entity identifiers** – unique, business-relevant identifiers such as employer numbers, 
+social security numbers, IBANs, or ISBNs.
 
-Instead of using raw strings or UUIDs, Denom aims to provide type-safe value objects, codecs, validators and integrations for common frameworks.
+Instead of using general value types like strings, numbers or UUIDs, Denom aims to provide type-safe value objects and support for canonicalization. 
 
-**Its goal:** _bring clarity, safety, and consistency to how domain identifiers are represented and exchanged across systems._
+**Its goal:** _bring clarity, safety, and consistency to how domain entity identifiers are represented within a system and exchanged across systems._
 
 ---
 
@@ -22,17 +23,19 @@ By choosing a concise and memorable name, Denom emphasizes its focus on clarity,
 
 ## Project Goals
 
-- Provide a **common API** for domain identifiers
-- Support **canonical and interoperable formats**
-- Make it easy to **extend** with custom identifier types
+- Provide a **common, simple API** for defining custom domain identifiers including support for composite identifiers. 
+- Support for **canonicalization** including a default implementation which creates URN/URI compatible (yet human-readable) string representations.
 - Keep it **lightweight and framework-agnostic**
 ---
 
-## Planned Features
+## Features
 
 - **Type-safe identifiers** as dedicated value objects
-- **Codec layer** for canonical string representations (URN/URI compatible)
+- **Default converter** implementation for URN/URI compatible canonical string representations
 - **Composite identifiers** for business contexts requiring multiple keys
+
+## Planned Features
+
 - **Validation** for common identifier formats
 - **Framework integrations**:
   - JSON (Jackson)

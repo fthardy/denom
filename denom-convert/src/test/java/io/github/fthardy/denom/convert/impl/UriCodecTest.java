@@ -1,4 +1,4 @@
-package io.github.fthardy.denom.converter;
+package io.github.fthardy.denom.convert.impl;
 
 import org.junit.jupiter.api.Test;
 

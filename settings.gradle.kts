@@ -1,3 +1,3 @@
 rootProject.name = "denom"
 
-include("denom-core")
+include("denom-core", "denom-convert")

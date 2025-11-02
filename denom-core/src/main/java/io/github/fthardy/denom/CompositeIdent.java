@@ -8,7 +8,21 @@ import java.util.stream.Collectors;
  */
 public non-sealed abstract class CompositeIdent extends DomainIdent {
 
-    static List<DomainIdent> createComponentListFrom(DomainIdent first, DomainIdent second, DomainIdent... further) {
+    /**
+     * A utility function which aggregates a number of given domain identifiers into a <code>List</code>-Instance.
+     * <p>
+     * This function makes sure that at least two domain identifiers are given and all identifiers are distinct. {@code null} is not a valid input value!
+     * </p>
+     *
+     * @param first the first domain identifier.
+     * @param second the second domain identifier.
+     * @param further any further domain identifiers.
+     *
+     * @return the distinct list of domain identifiers in the given order.
+     *
+     * @throws IllegalArgumentException when there is a duplicate domain identifier in the given list.
+     */
+    static List<DomainIdent> toList(DomainIdent first, DomainIdent second, DomainIdent... further) {
         Set<DomainIdent> set = new LinkedHashSet<>();
         set.add(Objects.requireNonNull(first));
         set.add(Objects.requireNonNull(second));
@@ -29,15 +43,12 @@ public non-sealed abstract class CompositeIdent extends DomainIdent {
      * At least two identifiers must be defined and no duplicate identifiers are allowed.
      * </p>
      *
-     * @param identType the identity type for the new domain identifier.
-     *                  <strong>The identity type is an internal detail. Do not expose it to the outside!</strong>
      * @param first the first identifier.
      * @param second the second identifier.
      * @param further optionally any further identifiers.
      */
-    protected CompositeIdent(IdentType identType, DomainIdent first, DomainIdent second, DomainIdent... further) {
-        super(identType);
-        this.components = createComponentListFrom(first, second, further);
+    protected CompositeIdent(DomainIdent first, DomainIdent second, DomainIdent... further) {
+        this.components = toList(first, second, further);
     }
 
     @Override
@@ -52,11 +63,11 @@ public non-sealed abstract class CompositeIdent extends DomainIdent {
 
     @Override
     public String toString() {
-        return "%s[%s]".formatted(type(), components.stream().map(DomainIdent::toString).collect(Collectors.joining(", ")));
+        return "%s[%s]".formatted(getClass().getSimpleName(), components.stream().map(DomainIdent::toString).collect(Collectors.joining(", ")));
     }
 
     /**
-     * @return the domain identifier instances which make up the components of this composite identifier.
+     * @return an immutable list of the domain identifier instances which make up the components of this composite identifier.
      */
     public List<DomainIdent> components() {
         return components;

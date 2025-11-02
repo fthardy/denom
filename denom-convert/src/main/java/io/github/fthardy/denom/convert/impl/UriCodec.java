@@ -1,4 +1,4 @@
-package io.github.fthardy.denom.converter;
+package io.github.fthardy.denom.convert.impl;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * A utility class providing methods for encoding and decoding a string in a RFC-3986-conform representation aka percent-encoding/decoding (UTF-8).
+ * A utility class providing methods for encoding and decoding a string in RFC-3986-conform representation aka percent-encoding/decoding (UTF-8).
  * <p>
  * NOTE:
  * <ul>
